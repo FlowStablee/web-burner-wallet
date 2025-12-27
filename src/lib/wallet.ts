@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 
 export interface WalletData {
   address: string;
@@ -11,10 +11,10 @@ export interface WalletData {
  */
 export function generateWallet(): WalletData {
   const wallet = ethers.Wallet.createRandom();
-
+  
   return {
     address: wallet.address,
-    mnemonic: wallet.phrase, // ✅ ethers v6
+    mnemonic: wallet.mnemonic?.phrase || '',
     privateKey: wallet.privateKey,
   };
 }
@@ -24,10 +24,10 @@ export function generateWallet(): WalletData {
  */
 export function importFromMnemonic(mnemonic: string): WalletData {
   const wallet = ethers.Wallet.fromPhrase(mnemonic);
-
+  
   return {
     address: wallet.address,
-    mnemonic, // ✅ keep original phrase
+    mnemonic: wallet.mnemonic?.phrase || '',
     privateKey: wallet.privateKey,
   };
 }
@@ -37,10 +37,10 @@ export function importFromMnemonic(mnemonic: string): WalletData {
  */
 export function importFromPrivateKey(privateKey: string): WalletData {
   const wallet = new ethers.Wallet(privateKey);
-
+  
   return {
     address: wallet.address,
-    mnemonic: "", // no mnemonic from private key
+    mnemonic: '', // Wallets imported from private keys don't have mnemonics
     privateKey: wallet.privateKey,
   };
 }
@@ -48,9 +48,6 @@ export function importFromPrivateKey(privateKey: string): WalletData {
 /**
  * Get wallet instance from private key
  */
-export function getWalletInstance(
-  privateKey: string,
-  provider: ethers.Provider
-): ethers.Wallet {
+export function getWalletInstance(privateKey: string, provider: ethers.Provider): ethers.Wallet {
   return new ethers.Wallet(privateKey, provider);
 }
