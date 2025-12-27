@@ -40,7 +40,7 @@ export function importFromPrivateKey(privateKey: string): WalletData {
   
   return {
     address: wallet.address,
-    mnemonic: wallet.mnemonic?.phrase || '',
+    mnemonic: '', // Wallets imported from private keys don't have mnemonics
     privateKey: wallet.privateKey,
   };
 }
